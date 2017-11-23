@@ -12,8 +12,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-const answerCallback = "https://slack.com/api/chat.postMessage"
-
 var (
 	answers = []string{
 		"Bello",
@@ -61,6 +59,12 @@ func AnswerMessage(ctx *gin.Context) {
 		return
 	}
 
+	url, ok := ctx.GetPostForm("response_url")
+	if !ok {
+		log.Error(errors.New("no response_url provided"))
+		return
+	}
+
 	answer := Answer{
 		Channel: channel,
 		Text:    answers[index],
@@ -72,7 +76,7 @@ func AnswerMessage(ctx *gin.Context) {
 		return
 	}
 
-	req, err := http.NewRequest(answerCallback, "application/json", bytes.NewReader(io))
+	req, err := http.NewRequest(url, "application/json", bytes.NewReader(io))
 	if err != nil {
 		log.Error(err)
 		return
