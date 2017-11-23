@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/common/log"
+	"github.com/spf13/viper"
 )
 
 const answerCallback = "https://slack.com/api/chat.postMessage"
@@ -71,7 +72,15 @@ func AnswerMessage(ctx *gin.Context) {
 		return
 	}
 
-	_, err = http.Post(answerCallback, "application/json", bytes.NewReader(io))
+	req, err := http.NewRequest(answerCallback, "application/json", bytes.NewReader(io))
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	req.Header.Set("Authorization", viper.GetString("token"))
+	client := new(http.Client)
+	_, err = client.Do(req)
 	if err != nil {
 		log.Error(err)
 		return

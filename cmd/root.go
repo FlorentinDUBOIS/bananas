@@ -22,6 +22,7 @@ func init() {
 
 	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "enable verbose output")
 	RootCmd.Flags().Int32P("port", "p", 8080, "set the port to listen")
+	RootCmd.Flags().String("token", "", "set the bearer token to use")
 
 	viper.BindPFlags(RootCmd.PersistentFlags())
 	viper.BindPFlags(RootCmd.Flags())
