@@ -28,7 +28,7 @@ var (
 		"Hana",
 		"Dul",
 		"Sae",
-		"Bottom - Buttom",
+		"Buttom",
 		"Butt",
 		"Chasy",
 		"Kampai",
@@ -66,9 +66,5 @@ func AnswerMessage(ctx *gin.Context) {
 
 	ctx.Header("Content-Type", "application/json")
 	ctx.Header("Authorization", fmt.Sprintf("Bearer %s", viper.GetString("token")))
-	if err := ctx.BindJSON(answer); err != nil {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
-	}
-
-	ctx.AbortWithStatus(http.StatusOK)
+	ctx.JSON(http.StatusOK, answer)
 }
