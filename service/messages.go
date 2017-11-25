@@ -1,9 +1,8 @@
 package service
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
+	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -54,7 +53,6 @@ type Answer struct {
 
 // AnswerMessage is the handler of /bananas
 func AnswerMessage(ctx *gin.Context) {
-	ctx.AbortWithStatus(http.StatusOK)
 	index := rand.Int() % len(answers)
 	channel, ok := ctx.GetPostForm("channel_id")
 	if !ok {
@@ -68,23 +66,11 @@ func AnswerMessage(ctx *gin.Context) {
 		Text:         answers[index],
 	}
 
-	io, err := json.Marshal(answer)
-	if err != nil {
-		log.Error(err)
-		return
+	ctx.Header("Content-Type", "application/json")
+	ctx.Header("Authorization", fmt.Sprintf("Bearer %s", viper.GetString("token")))
+	if err := ctx.BindJSON(answer); err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	req, err := http.NewRequest(answerCallback, "application/json", bytes.NewReader(io))
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	req.Header.Set("Authorization", viper.GetString("token"))
-	client := new(http.Client)
-	_, err = client.Do(req)
-	if err != nil {
-		log.Error(err)
-		return
-	}
+	ctx.AbortWithStatus(http.StatusOK)
 }
