@@ -47,8 +47,9 @@ var (
 
 // Answer is the response structure
 type Answer struct {
-	Channel string `json:"channel"`
-	Text    string `json:"text"`
+	ResponseType string `json:"response_type,omitempty"`
+	Channel      string `json:"channel,omitempty"`
+	Text         string `json:"text,omitempty"`
 }
 
 // AnswerMessage is the handler of /bananas
@@ -62,8 +63,9 @@ func AnswerMessage(ctx *gin.Context) {
 	}
 
 	answer := Answer{
-		Channel: channel,
-		Text:    answers[index],
+		ResponseType: "in_channel",
+		Channel:      channel,
+		Text:         answers[index],
 	}
 
 	io, err := json.Marshal(answer)
