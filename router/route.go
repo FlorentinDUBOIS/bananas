@@ -15,11 +15,6 @@ type Route struct {
 // Routes is a slice of Route
 var Routes = []Route{
 	{
-		Method:  "GET",
-		Path:    "/messages",
-		Handler: service.AnswerMessage,
-	},
-	{
 		Method:  "POST",
 		Path:    "/messages",
 		Handler: service.AnswerMessage,
