@@ -11,8 +11,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-const answerCallback = "https://slack.com/api/chat.postMessage"
-
 var (
 	answers = []string{
 		"Bello",
